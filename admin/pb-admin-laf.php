@@ -89,6 +89,7 @@ function replace_book_admin_menu() {
 	remove_submenu_page( 'options-general.php', 'options-discussion.php' );
 	remove_submenu_page( 'options-general.php', 'options-media.php' );
 	remove_submenu_page( 'options-general.php', 'options-permalink.php' );
+	remove_submenu_page( 'themes.php', 'customize.php' );
 
 	remove_menu_page( "edit.php?post_type=part" );
 	remove_menu_page( "edit.php" );
@@ -532,6 +533,10 @@ function init_css_js() {
 	if ( 'pb_catalog' == esc_attr( @$_REQUEST['page'] ) ) {
 		wp_register_style( 'pressbooks-catalog', PB_PLUGIN_URL . 'assets/css/catalog.css', array( 'colors', 'pressbooks-admin' ), '20130712', 'screen' );
 		wp_enqueue_style( 'pressbooks-catalog' );
+		wp_register_style( 'select2-css', PB_PLUGIN_URL . 'symbionts/select2/select2.css', array(), '3.4.1', 'screen' );
+		wp_enqueue_style( 'select2-css' );
+		wp_register_script( 'select2-js', PB_PLUGIN_URL . 'symbionts/select2/select2.min.js', array( 'jquery' ), '3.4.1' );
+		wp_enqueue_script( 'select2-js' );
 	}
 
 	// Don't let other plugins override our scripts
@@ -541,7 +546,7 @@ function init_css_js() {
 	} );
 
 	// Enqueue later, on-the-fly, using action: admin_print_scripts-
-	wp_register_script( 'jquery-blockui', PB_PLUGIN_URL . 'symbionts/jquery/jquery.blockUI.js', array( 'jquery', 'jquery-ui-core' ), '2.53' );
+	wp_register_script( 'jquery-blockui', PB_PLUGIN_URL . 'symbionts/jquery/jquery.blockUI.js', array( 'jquery', 'jquery-ui-core' ), '2.64' );
 	wp_register_script( 'pb-export', PB_PLUGIN_URL . 'assets/js/export.js', array( 'jquery' ), '1.0.1' );
 	wp_register_script( 'pb-organize', PB_PLUGIN_URL . 'assets/js/organize.js', array( 'jquery', 'jquery-ui-core', 'jquery-blockui' ), '1.0.1' );
 	wp_register_script( 'pb-metadata', PB_PLUGIN_URL . 'assets/js/book-information.js', array( 'jquery' ), '1.0.1' );

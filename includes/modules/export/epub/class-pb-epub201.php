@@ -238,7 +238,8 @@ class Epub201 extends Export {
 		// EPUB specific
 
 		// Adobe Digital Editions has problems with exotic dashes, that is to say if this were 1999...
-		$html = str_replace( array( '–', '&#8211;', '—', '&#8212;', '‑' ), '-', $html );
+		// TODO: Some users want this, others do not want this, make up your mind...
+		// $html = str_replace( array( '–', '&#8211;', '—', '&#8212;', '‑' ), '-', $html );
 
 		return $html;
 	}
@@ -254,7 +255,7 @@ class Epub201 extends Export {
 	 */
 	function mediaType( $file ) {
 
-		$mime = parent::mimeType( $file );
+		$mime = static::mimeType( $file );
 		$mime = explode( ';', $mime );
 		$mime = trim( $mime[0] );
 
@@ -381,7 +382,6 @@ class Epub201 extends Export {
 			'no_deprecated_attr' => 2,
 			'unique_ids' => 'fixme-',
 			'hook' => '\PressBooks\Sanitize\html5_to_xhtml11',
-			'tidy' => -1,
 		);
 
 		// Reset on each htmLawed invocation
@@ -1340,7 +1340,10 @@ class Epub201 extends Export {
 			return '';
 		}
 
-		$filename = array_shift( explode( '?', basename( $url ) ) ); // Basename without query string
+		// Basename without query string
+		$filename = explode( '?', basename( $url ) );
+		$filename = array_shift( $filename );
+
 		$filename = sanitize_file_name( urldecode( $filename ) );
 		$filename = Sanitize\force_ascii( $filename );
 

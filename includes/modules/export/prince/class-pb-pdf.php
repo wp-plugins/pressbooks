@@ -145,8 +145,9 @@ class Pdf extends Export {
 	 * Add $this->url as additional log info, fallback to parent.
 	 *
 	 * @param $message
+	 * @param array $more_info (unused, overridden)
 	 */
-	function logError( $message ) {
+	function logError( $message, array $more_info = array() ) {
 
 		$more_info = array(
 			'url' => $this->url,
@@ -165,7 +166,7 @@ class Pdf extends Export {
 	 */
 	protected function isPdf( $file ) {
 
-		$mime = $this->mimeType( $file );
+		$mime = static::mimeType( $file );
 
 		return ( strpos( $mime, 'application/pdf' ) !== false );
 	}
