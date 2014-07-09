@@ -21,7 +21,7 @@ class Metadata {
 	 * @see upgrade()
 	 * @var int
 	 */
-	static $currentVersion = 9;
+	static $currentVersion = 10;
 
 
 	/**
@@ -85,8 +85,8 @@ class Metadata {
 
 		return get_post_meta( $meta_post->ID );
 	}
-
-
+	
+		
 	/**
 	 * Return a database ID for a given meta key.
 	 *
@@ -106,7 +106,69 @@ class Metadata {
 
 		return false;
 	}
+	
+	/**
+	 * Returns an html blob of meta elements based on what is set in 'Book Information'
+	 * 
+	 * @return string 
+	 */
+	function getSeoMetaElements() {
+		// map items that are already captured
+		$meta_mapping = array(
+		    'author' => 'pb_author',
+		    'description' => 'pb_about_50',
+		    'keywords' => 'pb_keywords_tags',
+		    'publisher' => 'pb_publisher'
+		);
+		$html = "<meta name='application-name' content='PressBooks'>\n";
+		$metadata = Book::getBookInformation();
 
+		// create meta elements
+		foreach ( $meta_mapping as $name => $content ) {
+			if ( array_key_exists( $content, $metadata ) ) {
+				$html .= "<meta name='" . $name . "' content='" . $metadata[$content] . "'>\n";
+			}
+		}
+
+		return $html;
+	}
+	
+	/**
+	 * Returns an html blob of microdata elements based on what is set in 'Book Information'
+	 *  
+	 * @return string
+	 */
+	function getMicrodataElements() {
+		// map items that are already captured
+		$micro_mapping = array(
+		    'about' => 'pb_bisac_subject',
+		    'alternativeHeadline' => 'pb_subtitle',
+		    'author' => 'pb_author',
+		    'copyrightHolder' => 'pb_copyright_holder',
+		    'copyrightYear' => 'pb_copyright_year',
+		    'datePublished' => 'pb_publication_date',
+		    'description' => 'pb_about_50',
+		    'editor' => 'pb_editor',
+		    'image' => 'pb_cover_image',
+		    'inLanguage' => 'pb_language',
+		    'keywords' => 'pb_keywords_tags',
+		    'publisher' => 'pb_publisher',
+		);
+		$metadata = Book::getBookInformation();
+
+		// create microdata elements
+		foreach ( $micro_mapping as $itemprop => $content ) {
+			if ( array_key_exists( $content, $metadata ) ) {
+				if ( 'pb_publication_date' == $content ) {
+					$content = date( 'Y-m-d', $metadata[$content] );
+				} else {
+					$content = $metadata[$content];
+				}
+				$html .= "<meta itemprop='" . $itemprop . "' content='" . $content . "' id='" . $itemprop . "'>\n";
+			}
+		}
+		return $html;
+	}
 
 	// ----------------------------------------------------------------------------------------------------------------
 	// Upgrades
@@ -125,10 +187,6 @@ class Metadata {
 			$this->upgradeBookInformation();
 			$this->upgradeBook();
 		}
-		if ( $version < 2 ) {
-			// New title page feature missing in many books
-			wp_insert_term( 'Title Page', 'front-matter-type', array( 'slug' => 'title-page' ) );
-		}
 		if ( $version < 3 ) {
 			$this->upgradeCustomCss();
 		}
@@ -144,7 +202,8 @@ class Metadata {
 		if ( $version < 8 ) {
 			$this->resetLandingPage();
 		}
-		if ( $version < 9 ) {
+		if ( $version < 10 ) {
+			\PressBooks\Taxonomy\insert_terms();
 			flush_rewrite_rules( false );
 		}
 	}
