@@ -10,6 +10,19 @@ namespace PressBooks;
 
 class Editor {
 
+
+	/**
+	 * Ensure that Word formatting that we like doesn't get filtered out.
+	 */
+	
+	static function mceValidWordElements( $init_array ) {
+
+		$init_array['paste_word_valid_elements'] = '@[class],p,h3,h4,h5,h6,a[href|target],strong/b,em/i,div[align],br,table,tbody,thead,tr,td,ul,ol,li,img[src]';
+		
+		return $init_array;
+		
+	}
+
 	/**
 	 * Adds style select dropdown to MCE buttons array.
 	 */
@@ -41,52 +54,63 @@ class Editor {
 				'block' => 'p',
 				'classes' => 'indent',
 				'wrapper' => false,
-
 			),
 			array(
-				'title' => 'Hanging Indent',
+				'title' => 'Hanging indent',
 				'block' => 'p',
 				'classes' => 'hanging-indent',
 				'wrapper' => false,
 			),
 			array(
-				'title' => 'No Indent',
+				'title' => 'No indent',
 				'block' => 'p',
 				'classes' => 'no-indent',
 				'wrapper' => false,
 			),
 			array(
-				'title' => 'Text Box',
+				'title' => 'Tight tracking',
+				'block' => 'span',
+				'classes' => 'tight',
+				'wrapper' => false,
+			),
+			array(
+				'title' => 'Very tight tracking',
+				'block' => 'span',
+				'classes' => 'very-tight',
+				'wrapper' => false,
+			),
+			array(
+				'title' => 'Loose tracking',
+				'block' => 'span',
+				'classes' => 'loose',
+				'wrapper' => false,
+			),
+			array(
+				'title' => 'Very loose tracking',
+				'block' => 'span',
+				'classes' => 'very-loose',
+				'wrapper' => false,
+			),
+			array(
+				'title' => 'Text box',
 				'block' => 'div',
 				'classes' => 'textbox',
 				'wrapper' => false,
 			),
 			array(
-				'title' => 'Text Box (Shaded)',
+				'title' => 'Text box (shaded)',
 				'block' => 'div',
 				'classes' => 'textbox shaded',
 				'wrapper' => false,
-			),
+			),	
 			array(
-				'title' => 'Text Box (Caption)',
-				'block' => 'div',
-				'classes' => 'textbox-caption',
-				'wrapper' => false,
-			),
-			array(
-				'title' => 'Pullquote',
-				'inline' => 'span',
-				'classes' => 'pullquote',
-				'wrapper' => false,
-			),
-			array(
-				'title' => 'Pullquote (Left)',
+				'title' => 'Pullquote (left)',
 				'inline' => 'span',
 				'classes' => 'pullquote-left',
 				'wrapper' => false,
 			),
 			array(
-				'title' => 'Pullquote (Right)',
+				'title' => 'Pullquote (right)',
 				'inline' => 'span',
 				'classes' => 'pullquote-right',
 				'wrapper' => false,
