@@ -58,7 +58,8 @@ function register_post_types() {
 		'capability_type' => 'post',
 		'has_archive' => true,
 		'hierarchical' => false, // do not set to true unless you want to break permalinks. Do you really want to do that? >:(
-		'supports' => array( 'title', 'editor', 'author', 'comments', 'page-attributes', 'revisions' )
+		'supports' => array( 'title', 'editor', 'author', 'comments', 'page-attributes', 'revisions' ),
+		'taxonomies' => array( 'chapter-type' )
 	);
 	register_post_type( 'chapter', $args );
 
@@ -92,7 +93,7 @@ function register_post_types() {
 		'capability_type' => 'post',
 		'has_archive' => true,
 		'hierarchical' => true,
-		'supports' => array( 'title' )
+		'supports' => array( 'title', 'page-attributes' )
 	);
 	register_post_type( 'part', $args );
 
@@ -223,4 +224,33 @@ function register_post_types() {
 		)
 	);
 	register_post_type( 'custom-css', $args );
+}
+
+
+/**
+ * Add custom post types to RSS feed
+ * 
+ * @param array $args 
+ * 
+ * @return array $args
+ */
+function add_post_types_rss( $args ) {
+	$blog_public = get_option( 'blog_public' );
+	$num_posts = get_option( 'posts_per_rss' );
+
+	// only if book is public
+	if ( 1 == $blog_public ) {
+		if ( isset( $args['feed'] ) && ! isset( $args['post_type'] ) ) {
+			$args['post_type'] = array( 'front-matter', 'back-matter', 'chapter' );
+		}
+		// increase default posts per rss
+		if ( 10 == $num_posts ) {
+			update_option( 'posts_per_rss', 999 );
+		}
+	} elseif ( 0 == $blog_public ) {
+		if ( isset( $args['feed'] ) && ! isset( $args['post_type'] ) ) {
+			$args['post_type'] = array( 'post' );
+		}
+	}
+	return $args;
 }

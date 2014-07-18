@@ -38,6 +38,10 @@ class Icml extends Export {
 			'meta' => \PressBooks\Book::getBookInformation(),
 			'book_contents' => $this->preProcessBookContents( \PressBooks\Book::getBookContents() ),
 		);
+		
+		$cc_copyright = strip_tags( $this->doCopyrightLicense( $vars['meta'] ) );
+		$vars['do_copyright_license'] = $cc_copyright;
+		
 		$book_html = $this->loadTemplate( __DIR__ . '/templates/xhtml.php', $vars );
 		$content = $this->transformXML( $book_html, PB_PLUGIN_DIR . 'symbionts/icml/tkbr2icml-v044.xsl' );
 
@@ -211,6 +215,7 @@ class Icml extends Export {
 			'valid_xhtml' => 1,
 			'unique_ids' => 'fixme-',
 			'hook' => '\PressBooks\Sanitize\html5_to_xhtml11',
+			'tidy' => -1,
 		);
 
 		return htmLawed( $html, $config );

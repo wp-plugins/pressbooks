@@ -14,6 +14,11 @@ This file must validate as CSS 2.01 with absolutely no errors
   Copyright 2011-2012 Book Oven Inc. (PressBooks.com) support@pressbooks.com  
 */
 
+
+/*__INSERT_EPUB_HOUSE_STYLE__*/
+
+
+
 body {
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, Times, serif;
 	line-height: 1.5em;
@@ -264,6 +269,9 @@ p.bl_indent {
     line-height: 1.2em;
     margin: 20px 0 -0.5em;
 }
+div.chapter.numberless h3.chapter-number {
+	display: none;
+}
 .part-title {
 	font-size: 2em;
 	text-transform: uppercase;
@@ -363,17 +371,23 @@ div.part-title-wrap > h3.part-number:before {
 	margin-top: 1.3em;
 }
 #toc span.chapter-author,
+#toc span.chapter-license,
 #toc span.chapter-subtitle {
 	display: block;
 	font-style: italic;
 	margin-left: 1em;
 }
 #toc span.chapter-author,
+#toc span.chapter-license,
 #toc span.chapter-subtitle {
 	margin-bottom: 5px;
 }
 #toc span.chapter-subtitle + 
-span.chapter-author {
+span.chapter-author,
+#toc span.chapter-subtitle + 
+span.chapter-license,
+span.chapter-author + 
+span.chapter-license {
 	margin-top: -5px;
 	margin-bottom: 5px;
 }
@@ -586,4 +600,5 @@ aside {
 .index .ugc  p.sub-entry {
 	padding-left:30px;
 }
- 
+
+/*__INSERT_MOBI_HOUSE_STYLE__*/

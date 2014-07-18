@@ -8,6 +8,7 @@ namespace PressBooks\Export;
 
 use PressBooks\Book;
 use PressBooks\CustomCss;
+use PressBooks\Metadata;
 
 
 // IMPORTANT! if this isn't set correctly before include, with a trailing slash, PclZip will fail.
@@ -42,6 +43,7 @@ abstract class Export {
 	 */
 	protected $reservedIds = array(
 		'cover-image',
+		'half-title-page',
 		'title-page',
 		'copyright-page',
 		'toc',
@@ -126,9 +128,24 @@ abstract class Export {
 
 		if ( ! $fullpath ) {
 			$fullpath = realpath( get_stylesheet_directory() . "/export/$type/script.js" );
+			if ( CustomCss::isCustomCss() && CustomCss::isRomanized() && $type == 'prince' ) {
+				$fullpath = realpath( get_stylesheet_directory() . "/export/$type/script-romanize.js" );
+			}
 		}
 
 		return $fullpath;
+	}
+	
+	/**
+	 * Is the parse sections option true?
+	 *
+	 * @return bool
+	 */
+	static function shouldParseSections() {
+
+		$options = get_option( 'pressbooks_theme_options_global' );
+		
+		return ( @$options['parse_sections'] );
 	}
 
 
@@ -187,7 +204,7 @@ abstract class Export {
 	 */
 	function createTmpFile() {
 
-		return array_search( 'uri', @array_flip( stream_get_meta_data( $GLOBALS[mt_rand()] = tmpfile() ) ) );
+		return \PressBooks\Utility\create_tmp_file();
 	}
 
 
@@ -268,8 +285,9 @@ abstract class Export {
 	 */
 	function fixAnnoyingCharacters( $html ) {
 
-		// Non-breaking spaces
-		$html = preg_replace( '/\xC2\xA0/', ' ', $html );
+		// Replace Non-breaking spaces with normal spaces
+		// TODO: Some users want this, others do not want this, make up your mind...
+		// $html = preg_replace( '/\xC2\xA0/', ' ', $html );
 
 		return $html;
 	}
@@ -383,6 +401,78 @@ abstract class Export {
 		return $content;
 	}
 
+	/**
+	 * Will create an html blob of copyright information, returns empty string
+	 * if user doesn't want it displayed 
+	 * 
+	 * @param array $metadata
+	 * @param string $title
+	 * @param int $id
+	 * @param string $section_author
+	 * @return string $html blob
+	 * @throws \Exception
+	 */
+	protected function doCopyrightLicense( $metadata, $title = '', $id = '', $section_author = '' ) {
+		$option = get_option( 'pressbooks_theme_options_global' );
+		$html = $license = $copyright_holder = '';
+		$lang = $metadata['pb_language'];
+
+		// if they don't want to see it, return
+		// at minimum we need book copyright information set
+		if ( false == $option['copyright_license'] || ! isset( $metadata['pb_book_license'] ) ) {
+			return '';
+		}
+
+		// if no post $id given, we default to book copyright 
+		if ( ! empty( $id ) ) {
+			$section_license = get_post_meta( $id, 'pb_section_license', true );
+			$link = get_permalink( $id );
+		} else {
+			$section_license = '';
+			$link = get_bloginfo( 'url' );
+			$title = get_bloginfo( 'name' );
+		}
+
+		// Copyright holder, set in order of precedence
+		if ( ! empty( $section_author ) ) {
+			// section author higher priority than book author, copyrightholder
+			$copyright_holder = $section_author;
+		} elseif ( isset( $metadata['pb_copyright_holder'] ) ) {
+			// book copyright holder higher priority than book author
+			$copyright_holder = $metadata['pb_copyright_holder'];
+		} elseif ( isset( $metadata['pb_author'] ) ) {
+			// book author is the fallback, default
+			$copyright_holder = $metadata['pb_author'];
+		}
+
+		// Copyright license, set in order of precedence
+		if ( ! empty( $section_license ) ) {
+			// section copyright higher priority than book 
+			$license = $section_license;
+		} elseif ( isset( $metadata['pb_book_license'] ) ) {
+			// book is the fallback, default
+			$license = $metadata['pb_book_license'];
+		}
+
+		// get xml response from API
+		$response = Metadata::getLicenseXml( $license, $copyright_holder, $link, $title, $lang );
+
+		try {
+			// convert to object
+			$result = simplexml_load_string( $response );
+
+			// evaluate it for errors
+			if ( ! false === $result || ! isset( $result->html ) ) {
+				throw new \Exception( 'Creative Commons license API not returning expected results at PressBooks\Metadata::getLicenseXml' );
+			} else {
+				// process the response, return html
+				$html = Metadata::getWebLicenseHtml( $result->html );
+			}
+		} catch ( \Exception $e ) {
+			$this->logError( $e->getMessage() );
+		}
+		return $html;
+	}
 
 	/**
 	 * Simple template system.
@@ -502,6 +592,9 @@ abstract class Export {
 			if ( isset( $x['epub'] ) ) {
 				$modules[] = '\PressBooks\Export\Epub\Epub201'; // Must be set before MOBI
 			}
+			if ( isset( $x['epub3'] ) ) {
+				$modules[] = '\PressBooks\Export\Epub3\Epub3'; // Must be set before MOBI
+			}
 			if ( isset( $x['mobi'] ) ) {
 				$modules[] = '\PressBooks\Export\Mobi\Kindlegen'; // Must be set after EPUB
 			}
@@ -516,6 +609,9 @@ abstract class Export {
 			}
 			if ( isset( $x['wxr'] ) ) {
 				$modules[] = '\PressBooks\Export\WordPress\Wxr';
+			}
+			if ( isset ( $x['vanillawxr'] ) ){
+				$modules[] = '\PressBooks\Export\WordPress\VanillaWxr';
 			}
 
 			// --------------------------------------------------------------------------------------------------------
@@ -623,6 +719,7 @@ abstract class Export {
 				}
 			}
 
+			if ( '__UNSET__' == $loc ) $loc = 'en_US'; // No match found, default to english
 		}
 
 		// Return
@@ -654,6 +751,31 @@ abstract class Export {
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * Inject house styles into CSS
+	 *
+	 * @param string $css
+	 *
+	 * @return string
+	 */
+	static function injectHouseStyles( $css ) {
+
+		$scan = array(
+			'/*__INSERT_PDF_HOUSE_STYLE__*/' => WP_CONTENT_DIR . '/themes/pdf-house-style.css',
+			'/*__INSERT_EPUB_HOUSE_STYLE__*/' => WP_CONTENT_DIR . '/themes/epub-house-style.css',
+			'/*__INSERT_MOBI_HOUSE_STYLE__*/' => WP_CONTENT_DIR . '/themes/mobi-house-style.css',
+		);
+
+		foreach ( $scan as $token => $replace_with ) {
+			if ( is_file( $replace_with ) ) {
+				$css = str_replace( $token, file_get_contents( $replace_with ), $css );
+			}
+		}
+
+		return $css;
 	}
 
 
