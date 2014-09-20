@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PressBooks\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/pressbooks\n"
 "POT-Creation-Date: 2013-09-20 14:45:33+00:00\n"
-"PO-Revision-Date: 2014-07-18 17:40-0400\n"
+"PO-Revision-Date: 2014-09-20 16:22-0500\n"
 "Last-Translator: fred_sudouest <fredotic@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/pressbooks/"
 "language/fr/)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.6\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #: admin/class-pb-catalog-list-table.php:78
 msgid "Visit Book"
@@ -70,7 +70,7 @@ msgstr "Mot-clé"
 
 #: admin/class-pb-catalog-list-table.php:191 admin/templates/catalog.php:35
 msgid "Featured"
-msgstr ""
+msgstr "Affiché"
 
 #: admin/class-pb-catalog-list-table.php:192
 msgid "Pub Date"
@@ -156,7 +156,7 @@ msgstr ""
 
 #: admin/pb-admin-customcss.php:113
 msgid "Last 10 CSS Revisions"
-msgstr ""
+msgstr "10 dernières révisions CSS"
 
 #: admin/pb-admin-customcss.php:116
 #: includes/modules/export/epub/class-pb-epub201.php:791
@@ -170,6 +170,7 @@ msgstr "par"
 #: admin/pb-admin-customcss.php:183
 msgid "This will overwrite existing custom CSS. Are you sure?"
 msgstr ""
+"Ceci écrasera le fichier CSS personnalisé actuel. Souhaitez-vous continuer?"
 
 #: admin/pb-admin-dashboard.php:21 admin/pb-admin-dashboard.php:42
 #: admin/pb-admin-dashboard.php:95
@@ -407,6 +408,8 @@ msgid ""
 "Your cover image (%s x %s) is too small. It should be 625px on the shortest "
 "side."
 msgstr ""
+"Votre image de couverture (%s x %s) est trop petite. Son plus petit côté "
+"doit mesurer 625 px minimum."
 
 #: admin/pb-admin-metaboxes.php:114 admin/pb-admin-metaboxes.php:155
 #: includes/class-pb-metadata.php:440
@@ -675,7 +678,7 @@ msgstr "Afficher les titres à l'export"
 
 #: admin/pb-admin-metaboxes.php:413
 msgid "Set as ebook start-point"
-msgstr ""
+msgstr "Définir comme point de départ de l'eBook"
 
 #: admin/pb-admin-metaboxes.php:419
 msgid "Front Matter Metadata"
@@ -733,7 +736,7 @@ msgstr "Espagnol"
 
 #: admin/templates/catalog.php:27
 msgid "Tags For"
-msgstr ""
+msgstr "Mots-clés pour"
 
 #: admin/templates/catalog.php:49
 msgid "Tags"
@@ -741,7 +744,7 @@ msgstr "Mots-Clés"
 
 #: admin/templates/catalog.php:52
 msgid "Comma delimited"
-msgstr ""
+msgstr "Délimité par des virgules"
 
 #: admin/templates/catalog.php:82
 msgid "My Catalog Profile"
@@ -753,27 +756,28 @@ msgstr "URL"
 
 #: admin/templates/catalog.php:97
 msgid "Tags Name"
-msgstr ""
+msgstr "Noms des mots-clés"
 
 #: admin/templates/catalog.php:106
 msgid "Logo Or Image"
-msgstr ""
+msgstr "Logo ou image"
 
 #: admin/templates/custom-css.php:20
 msgid "Error: Something went wrong. See logs for more details."
 msgstr ""
+"Erreur : un problème est survenu. Etudiez les logs pour en savoir davantage."
 
 #: admin/templates/custom-css.php:36
 msgid "You are currently editing CSS for"
-msgstr ""
+msgstr "Vous éditez actuellement les CSS pour"
 
 #: admin/templates/custom-css.php:37
 msgid "Copy CSS from"
-msgstr ""
+msgstr "Copiez les CSS de"
 
 #: admin/templates/custom-css.php:42
 msgid "Save"
-msgstr ""
+msgstr "Sauvegarder"
 
 #: admin/templates/export.php:27
 msgid "Error: The export failed. See logs for more details."
@@ -869,31 +873,31 @@ msgstr "Changer les Options de Thème"
 
 #: admin/templates/import.php:20
 msgid "Import in progress: %s"
-msgstr ""
+msgstr "Importation en cours : %s"
 
 #: admin/templates/import.php:40
 msgid "Are you sure you want to abort the import?"
-msgstr ""
+msgstr "Etes-vous certain de vouloir annuler l'import?"
 
 #: admin/templates/import.php:60
 msgid "Chapter"
-msgstr ""
+msgstr "Chapitre"
 
 #: admin/templates/import.php:88
 msgid "Start"
-msgstr ""
+msgstr "Démarrer"
 
 #: admin/templates/import.php:90
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: admin/templates/import.php:100
 msgid "Supported file extensions:"
-msgstr ""
+msgstr "Extensions de fichiers acceptées :"
 
 #: admin/templates/import.php:101
 msgid "Maximum file size:"
-msgstr ""
+msgstr "Taille maximum de fichier :"
 
 #: admin/templates/import.php:110
 msgid "Type of file"
@@ -901,11 +905,11 @@ msgstr "Type de fichier"
 
 #: admin/templates/import.php:114
 msgid "WXR (WordPress eXtended RSS)"
-msgstr ""
+msgstr "WXR (WordPress eXtended RSS)"
 
 #: admin/templates/import.php:116
 msgid "ODT (word processing file format of OpenDocument)"
-msgstr ""
+msgstr "ODT (format de traitement de texte d'OpenDocument)"
 
 #: admin/templates/import.php:122
 msgid "File"
@@ -928,6 +932,8 @@ msgid ""
 "Only users you invite can see your book, regardless of individual chapter "
 "privacy settings below."
 msgstr ""
+"Seuls les utilisateurs que vous avez invités peuvent afficher le livre, "
+"quels que soient les paramètres individuels d'affichage des chapitres."
 
 #: admin/templates/organize.php:51
 msgid "Chapters"
@@ -972,7 +978,7 @@ msgstr "Editer"
 #: admin/templates/organize.php:84 admin/templates/organize.php:183
 #: admin/templates/organize.php:265
 msgid "Ebook start point"
-msgstr ""
+msgstr "Point de départ de l'eBook"
 
 #: admin/templates/organize.php:123 admin/templates/organize.php:166
 #: admin/templates/organize.php:217 admin/templates/organize.php:304
@@ -986,7 +992,7 @@ msgstr "Remettre les Chapitres en ordre"
 
 #: admin/templates/sell.php:12
 msgid "Sell Your Book"
-msgstr ""
+msgstr "Vendez votre livre"
 
 #: admin/templates/sell.php:13
 msgid ""
@@ -995,7 +1001,7 @@ msgstr ""
 
 #: admin/templates/sell.php:18
 msgid "Ebook Distribution"
-msgstr ""
+msgstr "Diffusion de l'eBook"
 
 #: admin/templates/sell.php:19
 msgid ""
@@ -1012,11 +1018,11 @@ msgstr ""
 
 #: admin/templates/sell.php:21
 msgid "Distribute with BookBaby"
-msgstr ""
+msgstr "Distribuez avec BookBaby"
 
 #: admin/templates/sell.php:26
 msgid "Print-On-Demand"
-msgstr ""
+msgstr "Impression à la demande"
 
 #: admin/templates/sell.php:27
 msgid ""
@@ -1027,7 +1033,7 @@ msgstr ""
 
 #: admin/templates/sell.php:28
 msgid "Print-on-Demand with CreateSpace"
-msgstr ""
+msgstr "Imprimer à la demande avec Createspace"
 
 #: admin/templates/sell.php:34
 msgid "Create a Buy Page on PressBooks"
@@ -1108,15 +1114,15 @@ msgstr ""
 
 #: includes/class-pb-activation.php:193 includes/class-pb-metadata.php:362
 msgid "Custom CSS for Ebook"
-msgstr ""
+msgstr "CSS personnalisé pour l'eBook"
 
 #: includes/class-pb-activation.php:197 includes/class-pb-metadata.php:366
 msgid "Custom CSS for PDF"
-msgstr ""
+msgstr "CSS personnalisé pour le PDF"
 
 #: includes/class-pb-activation.php:201 includes/class-pb-metadata.php:370
 msgid "Custom CSS for Web"
-msgstr ""
+msgstr "CSS personnalisé pour le web"
 
 #: includes/class-pb-activation.php:207
 msgid "Default Data"
@@ -1155,7 +1161,7 @@ msgstr "Page de Titre"
 
 #: includes/modules/export/epub/class-pb-epub201.php:991
 msgid "Make your own books using PressBooks.com"
-msgstr ""
+msgstr "Créer vos propres livres avec PresseBooks.com"
 
 #: includes/modules/export/epub/class-pb-epub201.php:1222
 #: includes/modules/export/hpub/class-pb-hpub.php:1009
@@ -1179,12 +1185,12 @@ msgstr "Notes"
 
 #: includes/modules/import/class-pb-import.php:328
 msgid "Your file does not appear to be a valid %s."
-msgstr ""
+msgstr "Votre fichier semble ne pas être un %s valide."
 
 #: includes/modules/import/epub/class-pb-epub201.php:184
 #: includes/modules/import/wordpress/class-pb-wxr.php:140
 msgid "Imported %s chapters."
-msgstr ""
+msgstr "%s chapitres importés."
 
 #: includes/modules/import/wordpress/class-pb-parser.php:56
 #: includes/modules/import/wordpress/class-pb-parser.php:61
@@ -1195,6 +1201,7 @@ msgstr ""
 #: includes/pb-image.php:303
 msgid "Your cover image should be 625px on the shortest side."
 msgstr ""
+"Votre image de couverture doit mesure au moins 625px sur son plus petit côté."
 
 #: includes/pb-postype.php:35
 msgctxt "post type general name"
@@ -1421,7 +1428,7 @@ msgstr "Information Livre"
 
 #: includes/pb-redirect.php:161
 msgid "Error: Unknown export format."
-msgstr ""
+msgstr "Erreur : format d'export inconnu."
 
 #: includes/pb-redirect.php:195
 msgid "No catalog was found for user"
@@ -1625,7 +1632,7 @@ msgstr "Pas d'Essais trouvés dans la Poubelle"
 #: themes-book/donham/functions.php:27 themes-book/donham/functions.php:28
 #: themes-book/donham/functions.php:45
 msgid "part"
-msgstr ""
+msgstr "Partie"
 
 #: themes-book/pressbooks-book/comments.php:3
 msgid ""
@@ -1749,15 +1756,15 @@ msgstr "Lettre au format américain"
 
 #: themes-book/pressbooks-book/functions.php:268
 msgid "8.5 x 9.25\""
-msgstr ""
+msgstr "8.5 x 9.25\""
 
 #: themes-book/pressbooks-book/functions.php:269
 msgid "duodecimo"
-msgstr ""
+msgstr "duodecimo"
 
 #: themes-book/pressbooks-book/functions.php:270
 msgid "pocket"
-msgstr ""
+msgstr "pocket"
 
 #: themes-book/pressbooks-book/functions.php:271
 msgid "A4"
@@ -1822,7 +1829,7 @@ msgstr "transformer en notes de fin de document"
 
 #: themes-book/pressbooks-book/functions.php:291
 msgid "Crop marks"
-msgstr ""
+msgstr "Marques d'impression"
 
 #: themes-book/pressbooks-book/functions.php:294
 #: themes-book/pressbooks-book/functions.php:469
@@ -1831,21 +1838,21 @@ msgstr ""
 
 #: themes-book/pressbooks-book/functions.php:294
 msgid "enabled"
-msgstr ""
+msgstr "activé"
 
 #: themes-book/pressbooks-book/functions.php:294
 msgid "disabled"
-msgstr ""
+msgstr "désactivé"
 
 #: themes-book/pressbooks-book/functions.php:297
 #: themes-book/pressbooks-book/functions.php:522
 msgid "Widows"
-msgstr ""
+msgstr "Veuves"
 
 #: themes-book/pressbooks-book/functions.php:300
 #: themes-book/pressbooks-book/functions.php:529
 msgid "Orphans"
-msgstr ""
+msgstr "Orphelins"
 
 #: themes-book/pressbooks-book/functions.php:306
 msgid "Ebook options"
@@ -1866,6 +1873,7 @@ msgstr "Afficher les numéros de chapitre"
 #: themes-book/pressbooks-book/functions.php:373
 msgid "These options apply universally to webbook, PDF and ebook exports."
 msgstr ""
+"Ces options s'appliquent globalement à l'export de webbooks, PDF et eBooks."
 
 #: themes-book/pressbooks-book/functions.php:434
 msgid "PDF Options"
@@ -1889,31 +1897,31 @@ msgstr "Lettre au format américain (8.5&quot; &times; 11&quot;)"
 
 #: themes-book/pressbooks-book/functions.php:449
 msgid "Custom (8.5&quot; &times; 9.25&quot;)"
-msgstr ""
+msgstr "Personnalisé (8.5&quot; &times; 9.25&quot;)"
 
 #: themes-book/pressbooks-book/functions.php:450
 msgid "Duodecimo (5&quot; &times; 7.75&quot;)"
-msgstr ""
+msgstr "Duodecimo (5&quot; &times; 7.75&quot;)"
 
 #: themes-book/pressbooks-book/functions.php:451
 msgid "Pocket (4.25&quot; &times; 7&quot;)"
-msgstr ""
+msgstr "Pocket (4.25&quot; &times; 7&quot;)"
 
 #: themes-book/pressbooks-book/functions.php:452
 msgid "A4 (21cm &times; 29.7cm)"
-msgstr ""
+msgstr "A4 (21cm &times; 29.7cm)"
 
 #: themes-book/pressbooks-book/functions.php:453
 msgid "A5 (14.8cm &times; 21cm)"
-msgstr ""
+msgstr "A5 (14.8cm &times; 21cm)"
 
 #: themes-book/pressbooks-book/functions.php:459
 msgid "Crop Marks"
-msgstr ""
+msgstr "Marques d'impression"
 
 #: themes-book/pressbooks-book/functions.php:464
 msgid "Display crop marks"
-msgstr ""
+msgstr "Afficher les marques d'impression"
 
 #: themes-book/pressbooks-book/functions.php:474
 msgid "Enable hyphenation"
@@ -2304,7 +2312,7 @@ msgstr "Entrées plus anciennes &raquo;"
 
 #: themes-root/pressbooks-publisher-one/index.php:13
 msgid "&laquo; Newer Entries"
-msgstr ""
+msgstr "&laquo; Entrées récentes"
 
 #: themes-root/pressbooks-publisher-one/loop.php:48
 msgid "No Comments"
