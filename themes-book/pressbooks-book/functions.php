@@ -13,7 +13,8 @@ add_filter( 'show_admin_bar', function () { return false; } );
 global $metakeys;
 $metakeys = array(
 	'pb_author' => __( 'Author', 'pressbooks' ),
-	'pb_publisher'  => __( 'Publisher', 'pressbooks' ),
+	'pb_contributing_authors' => __( 'Contributing Author', 'pressbooks' ),
+ 	'pb_publisher'  => __( 'Publisher', 'pressbooks' ),
 	'pb_print_isbn'  => __( 'Print ISBN', 'pressbooks' ),
 	'pb_keywords_tags'  => __( 'Keywords/Tags', 'pressbooks' ),
 	'pb_publication_date'  => __( 'Publication Date', 'pressbooks' ),
@@ -54,14 +55,14 @@ function pb_enqueue_scripts() {
 		$deps = array();
 		if ( ! pb_custom_stylesheet_imports_base() ) {
 			// Use default stylesheet as base (to avoid horribly broken webbook)
-			wp_register_style( 'pressbooks', PB_PLUGIN_URL . 'themes-book/pressbooks-book/style.css', array(), null, 'screen' );
+			wp_register_style( 'pressbooks', PB_PLUGIN_URL . 'themes-book/pressbooks-book/style.css', array(), null, 'screen,print' );
 			wp_enqueue_style( 'pressbooks' );
 			$deps = array( 'pressbooks' );
 		}
 		wp_register_style( 'pressbooks-custom-css', pb_get_custom_stylesheet_url(), $deps, get_option( 'pressbooks_last_custom_css' ), 'screen' );
 		wp_enqueue_style( 'pressbooks-custom-css' );
 	} else {
-		wp_register_style( 'pressbooks', get_bloginfo( 'stylesheet_url' ), array(), null, 'screen' );
+		wp_register_style( 'pressbooks', get_bloginfo( 'stylesheet_url' ), array(), null, 'screen,print' );
 		wp_enqueue_style( 'pressbooks' );
 	}
 	if (! is_front_page() ) {
@@ -1148,7 +1149,7 @@ function pressbooks_theme_ebook_css_override( $css ) {
 
 	// Indent paragraphs? 1 = Indent (default), 2 = Skip Lines
 	if ( 2 == @$options['ebook_paragraph_separation'] ) {
-		$css .= "p + p, .indent { text-indent: 0; margin-top: 1em; } \n";
+		$css .= "p + p, .indent, div.ugc p.indent { text-indent: 0; margin-top: 1em; } \n";
 	}
 
 	// --------------------------------------------------------------------
