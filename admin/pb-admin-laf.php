@@ -69,8 +69,7 @@ function replace_book_admin_menu() {
 
 	global $menu, $submenu;
 
-	// Modify $menu and $submenu global arrays to do some tasks, such as adding a new separator,
-	// moving items from one menu into another, and reordering sub-menu items.
+	// Modify $menu and $submenu global arrays to do some tasks, such as adding a new separator, moving items from one menu into another, and reordering sub-menu items.
 
 	$menu[13] = $menu[60]; // Relocate Appearance
 	unset( $menu[60] );
@@ -109,11 +108,6 @@ function replace_book_admin_menu() {
 	remove_menu_page( "plugins.php" );
 	remove_submenu_page( "edit.php?post_type=chapter", "edit.php?post_type=chapter" );
 
-
-	// Separator
-	// $menu[56] = array( '', 'read', "separator{0}", '', 'wp-menu-separator' );
-
-
 	// Organize
 	$page = add_submenu_page( 'edit.php?post_type=chapter', __( 'Organize', 'pressbooks' ), __( 'Organize', 'pressbooks' ), 'edit_posts', 'pressbooks', __NAMESPACE__ . '\display_organize' );
 	add_action( 'admin_enqueue_scripts', function ( $hook ) use ( $page ) {
@@ -143,7 +137,8 @@ function replace_book_admin_menu() {
 	$front_matter_types = $submenu['edit.php?post_type=front-matter'][15];
 	$back_matter_types = $submenu['edit.php?post_type=back-matter'][15];
 	unset( $submenu['edit.php?post_type=chapter'][10] );
-	
+	unset( $submenu['edit.php?post_type=chapter'][15] );
+
 	if ( is_super_admin() ) {
 		// If network administrator, give the option to see chapter, front matter and back matter types.
 		array_push(
@@ -173,10 +168,6 @@ function replace_book_admin_menu() {
 			}
 		}
 	} );
-	
-	// Separator
-	// $menu[14] = array( '', 'read', "separator{0}", '', 'wp-menu-separator' );
-
 
 	// Export
 	$page = add_menu_page( __( 'Export', 'pressbooks' ), __( 'Export', 'pressbooks' ), 'edit_posts', 'pb_export', __NAMESPACE__ . '\display_export', '', 14 );

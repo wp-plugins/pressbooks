@@ -52,13 +52,17 @@ class Book {
 	 *
 	 * @return array
 	 */
-	static function getBookInformation() {
+	static function getBookInformation( $id = '' ) {
 
 		// -----------------------------------------------------------------------------
 		// Is cached?
 		// -----------------------------------------------------------------------------
-
-		global $blog_id;
+		if ( ! empty( $id ) && is_int( $id ) ) {
+			$blog_id = $id;
+			switch_to_blog( $blog_id );
+		} else {
+			global $blog_id;
+		}
 		$cache_id = "book-inf-$blog_id";
 		$book_information = wp_cache_get( $cache_id, 'pb' );
 		if ( $book_information ) {
@@ -113,6 +117,10 @@ class Book {
 		// -----------------------------------------------------------------------------
 
 		wp_cache_set( $cache_id, $book_information, 'pb', 86400 );
+		
+		if ( ! empty( $id ) && is_int( $id ) ) {
+			restore_current_blog();
+		}
 
 		return $book_information;
 	}
@@ -125,13 +133,17 @@ class Book {
 	 * @see bottom of this file for more info
 	 * @return array
 	 */
-	static function getBookStructure() {
+	static function getBookStructure( $id = '' ) {
 
 		// -----------------------------------------------------------------------------
 		// Is cached?
 		// -----------------------------------------------------------------------------
-
-		global $blog_id;
+		if ( ! empty( $id ) && is_int( $id ) ){
+			$blog_id = $id;
+			switch_to_blog( $id );
+		} else {
+			global $blog_id;
+		}
 		$cache_id = "book-str-$blog_id";
 		$book_structure = wp_cache_get( $cache_id, 'pb' );
 		if ( $book_structure ) {
@@ -249,7 +261,11 @@ class Book {
 		// -----------------------------------------------------------------------------
 
 		wp_cache_set( $cache_id, $book_structure, 'pb', 86400 );
-
+		
+		if ( ! empty( $id ) && is_int( $id ) ) {
+			restore_current_blog();
+		}
+		
 		return $book_structure;
 	}
 
@@ -324,19 +340,19 @@ class Book {
 	}
 	
 	/**
-	 * Returns a hierarchical array of subsections in a chapter.
+	 * Returns an array of subsections in front matter, back matter, or chapters.
 	 *
 	 * @param $id
 	 *
 	 */
-	static function getChapterSubsections( $id ) {
-		$chapter = get_post( $id );
+	static function getSubsections( $id ) {
+		$parent = get_post( $id );
 		$output = array();
 		$s = 1;
 		$html = new \DOMDocument();
-		$html->loadHTML( apply_filters( 'the_content', $chapter->post_content ) );
+		$html->loadHTML( apply_filters( 'the_content', $parent->post_content ) );
 		$xpath = new \DOMXpath($html);
-		foreach( $xpath->query('/html/body/section/h1') as $node ) {
+		foreach( $xpath->query('/html/body/section/h1|/html/body/h1') as $node ) {
 			$output['section-' . $s] = $node->nodeValue;
 			$s++;
 		}
