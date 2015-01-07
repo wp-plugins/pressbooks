@@ -1,7 +1,7 @@
 === PressBooks ===
 
 Contributors: PressBooks <code@pressbooks.com>
-Version: 2.4
+Version: 2.4.1
 Tags: ebooks, publishing, webbooks
 Requires at least: 4.1
 Tested up to: 4.1
@@ -190,6 +190,9 @@ TK.
 
 == Changelog ==
 
+= 2.4.1 =
+* Fixed issue with improperly parsted sections in chapters and back matter.
+
 = 2.4 =
 * Requires WordPress 4.1.
 * Refined export logic to ensure that parts are handled properly under all circumstances.
@@ -199,7 +202,7 @@ TK.
 * Fixed bug that broke the running head in PDF exports.
 * Fixed bug that broke internal links in PDF exports.
 * Fixed bug that caused the Chapter Types menu item to be displayed twice for certain users.
-* Experimental PressBooks API (props to @bdolor; see http://pressbooks.com/api/v1/docs).
+* Beta PressBooks API (props to @bdolor; see http://pressbooks.com/api/v1/docs).
 * Collapsible TOCs for webbooks (props to @drlippman).
 * Import enhancements (props to @bdolor).
 * EPUB export enhancements (props to @bdolor).
