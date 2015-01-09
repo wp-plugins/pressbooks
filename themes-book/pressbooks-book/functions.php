@@ -13,7 +13,8 @@ add_filter( 'show_admin_bar', function () { return false; } );
 global $metakeys;
 $metakeys = array(
 	'pb_author' => __( 'Author', 'pressbooks' ),
-	'pb_publisher'  => __( 'Publisher', 'pressbooks' ),
+	'pb_contributing_authors' => __( 'Contributing Author', 'pressbooks' ),
+ 	'pb_publisher'  => __( 'Publisher', 'pressbooks' ),
 	'pb_print_isbn'  => __( 'Print ISBN', 'pressbooks' ),
 	'pb_keywords_tags'  => __( 'Keywords/Tags', 'pressbooks' ),
 	'pb_publication_date'  => __( 'Publication Date', 'pressbooks' ),
@@ -54,14 +55,14 @@ function pb_enqueue_scripts() {
 		$deps = array();
 		if ( ! pb_custom_stylesheet_imports_base() ) {
 			// Use default stylesheet as base (to avoid horribly broken webbook)
-			wp_register_style( 'pressbooks', PB_PLUGIN_URL . 'themes-book/pressbooks-book/style.css', array(), null, 'screen' );
+			wp_register_style( 'pressbooks', PB_PLUGIN_URL . 'themes-book/pressbooks-book/style.css', array(), null, 'screen,print' );
 			wp_enqueue_style( 'pressbooks' );
 			$deps = array( 'pressbooks' );
 		}
 		wp_register_style( 'pressbooks-custom-css', pb_get_custom_stylesheet_url(), $deps, get_option( 'pressbooks_last_custom_css' ), 'screen' );
 		wp_enqueue_style( 'pressbooks-custom-css' );
 	} else {
-		wp_register_style( 'pressbooks', get_bloginfo( 'stylesheet_url' ), array(), null, 'screen' );
+		wp_register_style( 'pressbooks', get_bloginfo( 'stylesheet_url' ), array(), null, 'screen,print' );
 		wp_enqueue_style( 'pressbooks' );
 	}
 	if (! is_front_page() ) {
@@ -73,6 +74,11 @@ function pb_enqueue_scripts() {
 		wp_enqueue_script( 'pb-pop-out-toc', get_template_directory_uri() . '/js/pop-out.js', array( 'jquery' ), '1.0', false );
 	}
 	
+	$options = get_option( 'pressbooks_theme_options_global' );
+	if ( @$options['toc_collapse'] ) {
+		wp_enqueue_script( 'pressbooks_toc_collapse',	get_template_directory_uri() . '/js/toc_collapse.js', array( 'jquery' ) );
+		wp_enqueue_style( 'dashicons' );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'pb_enqueue_scripts' );
 
@@ -432,7 +438,8 @@ function pressbooks_theme_options_global_init() {
 	$_page = $_option = 'pressbooks_theme_options_global';
 	$_section = 'global_options_section';
 	$defaults = array(
-		'chapter_numbers' => 1
+		'chapter_numbers' => 1,
+		'toc_collapse' => 0
 	);
 
 	if ( false == get_option( $_option ) ) {
@@ -476,6 +483,17 @@ function pressbooks_theme_options_global_init() {
 		$_section,
 		array(
 			 __( 'Display the copyright license', 'pressbooks' )
+		)
+	);
+	
+	add_settings_field(
+		'toc_collapse',
+		__( 'Collapsable TOC', 'pressbooks' ),
+		'pressbooks_theme_toc_collapse_callback',
+		$_page,
+		$_section,
+		array(
+			 __( 'Make webbook TOC collapsable', 'pressbooks' )
 		)
 	);
 
@@ -536,6 +554,18 @@ function pressbooks_theme_copyright_license_callback( $args ) {
 	echo $html;
 }
 
+// Global Options Field Callback
+function pressbooks_theme_toc_collapse_callback( $args ) {
+	$options = get_option( 'pressbooks_theme_options_global' );
+	
+	if ( ! isset( $options['toc_collapse'] ) ) {
+		$options['toc_collapse'] = 0;
+	}
+	$html = '<input type="checkbox" id="toc_collapse" name="pressbooks_theme_options_global[toc_collapse]" value="1" ' . checked( 1, $options['toc_collapse'], false ) . '/>';
+	$html .= '<label for="toc_collapse"> ' . $args[0] . '</label>';
+	echo $html;
+}
+
 // Global Options Input Sanitization
 function pressbooks_theme_options_global_sanitize( $input ) {
 
@@ -557,6 +587,12 @@ function pressbooks_theme_options_global_sanitize( $input ) {
 		$options['copyright_license'] = 0;
 	} else {
 		$options['copyright_license'] = 1;
+	}
+	
+	if ( ! isset( $input['toc_collapse'] ) || $input['toc_collapse'] != '1' ) {
+		$options['toc_collapse'] = 0;
+	} else {
+		$options['toc_collapse'] = 1;
 	}
 
 	return $options;
@@ -1148,7 +1184,7 @@ function pressbooks_theme_ebook_css_override( $css ) {
 
 	// Indent paragraphs? 1 = Indent (default), 2 = Skip Lines
 	if ( 2 == @$options['ebook_paragraph_separation'] ) {
-		$css .= "p + p, .indent { text-indent: 0; margin-top: 1em; } \n";
+		$css .= "p + p, .indent, div.ugc p.indent { text-indent: 0; margin-top: 1em; } \n";
 	}
 
 	// --------------------------------------------------------------------

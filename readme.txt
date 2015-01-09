@@ -1,10 +1,10 @@
 === PressBooks ===
 
 Contributors: PressBooks <code@pressbooks.com>
-Version: 2.3.1
+Version: 2.4.2
 Tags: ebooks, publishing, webbooks
-Requires at least: WordPress 3.9.1
-Tested up to: WordPress 3.9.1
+Requires at least: 4.1
+Tested up to: 4.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +34,7 @@ in source code headers.
 IMPORTANT!
 
  * Do not install PressBooks on an existing WordPress blog -- create a new WordPress install instead.
- * PressBooks works with PHP 5.4.x and WordPress 3.9.1. Lower versions are not supported.
+ * PressBooks works with PHP 5.4.x and WordPress 4.1. Lower versions are not supported.
 
 *Part 1, WordPress generic:*
 
@@ -190,4 +190,34 @@ TK.
 
 == Changelog ==
 
-See: https://github.com/pressbooks/pressbooks/commits/master
+= 2.4.2 =
+* Fixed licenses.
+* Added child theme support to collapsible TOC functionality (props to @bdolor).
+
+= 2.4.1 =
+* Fixed issue with improperly parsed sections in chapters and back matter.
+
+= 2.4 =
+* Requires WordPress 4.1.
+* Refined export logic to ensure that parts are handled properly under all circumstances.
+* Refined parsing of chapter subsections; this feature no longer requires the use of the `<section>` tag.
+* Subsections are now parsed in front- and back-matter as well.
+* Support for a centralized fonts folder in the themes directory.
+* Fixed bug that broke the running head in PDF exports.
+* Fixed bug that broke internal links in PDF exports.
+* Fixed bug that caused the Chapter Types menu item to be displayed twice for certain users.
+* Beta PressBooks API (props to @bdolor; see http://pressbooks.com/api/v1/docs).
+* Collapsible TOCs for webbooks (props to @drlippman).
+* Import enhancements (props to @bdolor).
+* EPUB export enhancements (props to @bdolor).
+
+= 2.3.3 =
+* Compatibility with WordPress 4.0.
+* Fixed some issues with our experimental EPUB3 export (props to @bdolor).
+* Enhancements to WXR and EPUB import (props to @bdolor and @drlippman).
+* Added support for contributing authors in webbooks and exports (props to @bdolor).
+* Added some new translation files.
+
+= 2.3.2 =
+* Cleaner print output from webbooks.
+* Ebook theme option to skip line between paragraphs is now honored in all themes.
