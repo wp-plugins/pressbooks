@@ -104,11 +104,11 @@ if ( ! empty( $_GET['export_warning'] ) && ( get_option( 'pressbooks_email_valid
 	if ( ! isset( $options['epub'] ) ) { $options['epub'] = 1; }
 	if ( ! isset( $options['epub3'] ) ) { $options['epub3'] = 1; }
 	if ( ! isset( $options['mobi'] ) ) { $options['mobi'] = 1; }
-	if ( ! isset( $options['hpub'] ) ) { $options['hpub'] = 0; }
 	if ( ! isset( $options['icml'] ) ) { $options['icml'] = 0; }
 	if ( ! isset( $options['xhtml'] ) ) { $options['xhtml'] = 0; }
 	if ( ! isset( $options['wxr'] ) ) { $options['wxr'] = 0; }
 	if ( ! isset( $options['vanillawxr'] ) ) { $options['vanillawxr'] = 0; }
+	if ( ! isset( $options['odt'] ) ) { $options['odt'] = 0; }
 	?>
     <form id="pb-export-form" action="<?php echo $export_form_url ?>" method="POST">
 	    <fieldset>
@@ -123,14 +123,16 @@ if ( ! empty( $_GET['export_warning'] ) && ( get_option( 'pressbooks_email_valid
 	    	<?php 
 		$host = parse_url( network_site_url(), PHP_URL_HOST );
 
-		if ( 'pressbooks.com' != $host ) { ?>
+			if ( 'pressbooks.com' != $host ) { ?>
 	    	<input type="checkbox" id="epub3" name="export_formats[epub3]" value="1" <?php checked(1, $options['epub3'], false); ?>/><label for="epub3"> <?php _e( 'EPUB 3 (Beta)', 'pressbooks' ); ?></label><br />
 	    	<?php } ?>
-	    	<input type="checkbox" id="hpub" name="export_formats[hpub]" value="1" <?php checked(1, $options['hpub'], false); ?>/><label for="hpub"> <?php _e( 'Hpub', 'pressbooks' ); ?></label><br />
 	    	<input type="checkbox" id="icml" name="export_formats[icml]" value="1" <?php checked(1, $options['icml'], false); ?>/><label for="icml"> <?php _e( 'ICML (for InDesign)', 'pressbooks' ); ?></label><br />
 	    	<input type="checkbox" id="xhtml" name="export_formats[xhtml]" value="1" <?php checked(1, $options['xhtml'], false); ?>/><label for="xhtml"> <?php _e( 'XHTML', 'pressbooks' ); ?></label><br />
 	    	<input type="checkbox" id="wxr" name="export_formats[wxr]" value="1" <?php checked(1, $options['wxr'], false); ?>/><label for="wxr"> <?php _e( 'PressBooks XML', 'pressbooks' ); ?></label><br />
 	    	<input type="checkbox" id="vanillawxr" name="export_formats[vanillawxr]" value="1" <?php checked(1, $options['vanillawxr'], false); ?>/><label for="vanillawxr"> <?php _e( 'WordPress XML', 'pressbooks' ); ?></label>
+	    	<?php if ( 'pressbooks.com' != $host ) { ?><br/>
+	    	<input type="checkbox" id="odt" name="export_formats[odt]" value="1" <?php checked(1, $options['odt'], false); ?>/><label for="odt"> <?php _e( 'ODT', 'pressbooks' ); ?></label>
+	    	<?php } ?>
 	    </fieldset>
     </form>
     <div class="clear"></div>
