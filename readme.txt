@@ -1,7 +1,7 @@
 === Pressbooks ===
 
 Contributors: Pressbooks <code@pressbooks.com>
-Version: 2.5
+Version: 2.5.1
 Tags: ebooks, publishing, webbooks
 Requires at least: 4.2.2
 Tested up to: 4.2.2
@@ -100,6 +100,7 @@ IMPORTANT!
  * For MOBI export install [KindleGen](http://www.amazon.com/gp/feature.html?docId=1000765211) - Version 2.9
  * For EPUB validation install [EpubCheck](http://code.google.com/p/epubcheck/) - Version 3.0.1
  * For XML validation install [xmllint](http://xmlsoft.org/xmllint.html) - Version 20800
+ * Certain Linux installations do not ship with the php5-xsl library enabled by default.  If you attempt to export an ePub and get a either a white screen with minimal text, or a "Fatal error: Class 'XSLTProcessor' not found" error, you may need to run a command like "apt-get install php5-xsl" 
 
 Unlisted versions are not supported. Upgrade/downgrade accordingly.
 
@@ -193,6 +194,28 @@ TK.
 TK.
 
 == Changelog ==
+
+= 2.5.1 =
+* Added MCE Table Editor (migrated from Pressbooks Textbook, props to @bdolor and the plugin's creators).
+* Added support for excluding root domains _and_ subdomains in `show_experimental_features()` function.
+* Added the ability to toggle social media integration on or off in webbooks (props to @bdolor).
+* Added the ability to restrict specific network administrators' access to some network administration pages.
+* Added a note in readme.txt indicating that `php5-xsl` is a required extension for certain exports (props to @jflowers45).
+* Added a function to intelligently load plugins in `/symbionts` so as to avoid conflicts (props to @bdolor and the Pressbooks Textbook team for providing the basis for this).
+* Forced Google webfonts to load via SSL (props to @bdolor).
+* Improved editor style so that large images fit the editing window (props to @hughmcguire).
+* Improved Javascript related to the sidebar table of contents in webbooks (props to @changemachine and @kdv24).
+* Improved logic related to maximum import size reporting (props to @jflowers45).
+* Improved styles associated with the accessibility plugin (props to @bdolor).
+* Improved XSL for ODT export.
+* Restored login screen branding in Pressbooks Publisher 2.0.
+* Restored user catalog links in Pressbooks Publisher 2.0.
+* Fixed a database error in user catalogs (props to @bdolor for the bug report).
+* Fixed an issue where books would overlap on the user catalog page (props to @bracken and @changemachine).
+* Fixed an issue where cover images and LaTex images would be omitted from ODT exports (props to @bdolor for the bug report and for assistance in solving this).
+* Fixed an issue where embedded audio files would be hidden in exports because of an inline style (props to @bdolor).
+* Fixed an issue where the `introduction` class would not be applied in certain exports.
+* Fixed an issue where exports would fail because the `get_user_by` function was being improperly namespaced (props to @borayeris for the bug report).
 
 = 2.5 =
 * Requires WordPress 4.2.2.

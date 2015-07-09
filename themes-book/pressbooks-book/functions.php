@@ -310,7 +310,6 @@ function pressbooks_theme_options_display() { ?>
 		<div id="icon-themes" class="icon32"></div>
 		<h2><?php echo wp_get_theme(); ?> Theme Options</h2>
 		<?php settings_errors(); ?>
-		<?php $host = parse_url( network_site_url(), PHP_URL_HOST ); ?>
 		<?php $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'global_options'; ?>
 		<h2 class="nav-tab-wrapper">
 		<a href="?page=pressbooks_theme_options&tab=global_options" class="nav-tab <?php echo $active_tab == 'global_options' ? 'nav-tab-active' : ''; ?>">Global Options</a>
@@ -318,7 +317,7 @@ function pressbooks_theme_options_display() { ?>
 		<?php if( true == \PressBooks\Utility\check_prince_install() ){ ?>
 		<a href="?page=pressbooks_theme_options&tab=pdf_options" class="nav-tab <?php echo $active_tab == 'pdf_options' ? 'nav-tab-active' : ''; ?>">PDF Options</a>
 		<?php } ;?>
-		<?php if( 'pressbooks.com' != $host ) {?>
+		<?php if ( true == \PressBooks\Utility\show_experimental_features() ) { ?>
 		<a href="?page=pressbooks_theme_options&tab=mpdf_options" class="nav-tab <?php echo $active_tab == 'mpdf_options' ? 'nav-tab-active' : ''; ?>">mPDF Options</a>
 		<?php } ?>
 		<a href="?page=pressbooks_theme_options&tab=ebook_options" class="nav-tab <?php echo $active_tab == 'ebook_options' ? 'nav-tab-active' : ''; ?>">Ebook Options</a>
@@ -635,6 +634,16 @@ function pressbooks_theme_options_web_init() {
 		)
 	);
 
+	add_settings_field(
+		'social_media_buttons', 
+		__( 'Enable Social Media', 'pressbooks' ), 
+		'pressbooks_theme_social_media_callback',
+		$_page,
+		$_section,
+		array(
+		    __('Add buttons to cover page and each chapter so that readers may share links to your book through social media: Facebook, Twitter, Google+.', 'pressbooks' )
+		)
+	);
 	register_setting(
 		$_option, 
 		$_option, 
@@ -672,6 +681,18 @@ function pressbooks_theme_toc_collapse_callback( $args ) {
 	echo $html;
 }
 
+// Web Options Field Callback
+function pressbooks_theme_social_media_callback( $args ) {
+	$options = get_option( 'pressbooks_theme_options_web' );
+
+	if ( ! isset( $options['social_media'] ) ) {
+		$options['social_media'] = 1;
+	}
+	$html = '<input type="checkbox" id="social_media" name="pressbooks_theme_options_web[social_media]" value="1" ' . checked( 1, $options['social_media'], false ) . '/>';
+	$html .= '<label for="social_media"> ' . $args[0] . '</label>';
+	echo $html;
+}
+
 // Web Options Sanitize
 function pressbooks_theme_options_web_sanitize( $input ) {
 
@@ -688,6 +709,13 @@ function pressbooks_theme_options_web_sanitize( $input ) {
 	} else {
 		$options['accessibility_fontsize'] = 1;
 	}
+	
+	if ( ! isset( $input['social_media'] ) || $input['social_media'] != '1' ) {
+		$options['social_media'] = 0;
+	} else {
+		$options['social_media'] = 1;
+	}	
+	
 	return $options;
 }
 

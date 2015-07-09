@@ -327,12 +327,103 @@ function show_experimental_features() {
 	// hosts where experimental features should be hidden
 	$hosts_for_hiding = array( 
 		'pressbooks.com',
+		'pressbooks.pub',
 	);
 
 	$host = parse_url( network_site_url(), PHP_URL_HOST );
 	
-	if ( in_array( $host, $hosts_for_hiding ) )
-		$result = false;
+	foreach( $hosts_for_hiding as $host_for_hiding ) {
+		if ( $host == $host_for_hiding || strpos( $host, $host_for_hiding ) ) {
+			$result = false;
+		}
+	}
 
 	return $result;
+}
+
+/**
+ * Include plugins in /symbionts
+ * 
+ * @since 2.5.1
+ */
+function include_plugins() {
+	$symbionts = array(
+	    'custom-metadata/custom_metadata.php' => 1,
+	    'search-regex/search-regex.php' => 1,
+	    'mce-table-buttons/mce_table_buttons.php' => 1,
+	);
+
+	$symbionts = filter_plugins( $symbionts );
+
+	// include plugins
+	if ( ! empty( $symbionts ) ) {
+		foreach ( $symbionts as $key => $val ) {
+			require_once( PB_PLUGIN_DIR . 'symbionts/' . $key);
+		}
+	}
+}
+
+/**
+ * Filters out active plugins, to avoid collisions with plugins already installed.
+ * 
+ * @since 2.5.1
+ * @param array $symbionts
+ * @return array
+ */
+function filter_plugins( $symbionts ) {
+	$already_active = get_option( 'active_plugins' );
+	$network_already_active = get_site_option( 'active_sitewide_plugins' );
+	
+	// don't include plugins already active at the site level, network level
+	if ( ! empty( $symbionts ) ) {
+		foreach ( $symbionts as $key => $val ) {
+			if ( in_array( $key, $already_active ) || array_key_exists( $key, $network_already_active )) {
+				unset( $symbionts[$key] );
+			}
+			
+		}
+	}
+	return $symbionts;
+}
+
+
+/**
+ * Function to return a string representing max import size by comparing values of upload_max_filesize, post_max_size
+ * Uses parse_size helper function since the values in php.ini are strings like 64M and 128K
+ * @return string
+ */
+
+function file_upload_max_size() {
+	static $max_size = -1;
+	// This function is adapted from Drupal and http://stackoverflow.com/questions/13076480/php-get-actual-maximum-upload-size 
+	if ($max_size < 0) {
+	
+		$post_max_size_str = ini_get( 'post_max_size' );
+		$upload_max_filesize_str = ini_get( 'upload_max_filesize' );
+		$post_max_size = parse_size( $post_max_size_str );
+		$upload_max_filesize = parse_size( $upload_max_filesize_str );
+		
+		// If upload_max_size is less, then reduce. Except if upload_max_size is
+		// zero, which indicates no limit.
+		$returnVal = $post_max_size_str;
+		if ( $upload_max_filesize > 0 && $upload_max_filesize < $post_max_size ) {
+		  $returnVal = $upload_max_filesize_str;
+		}
+	}
+	return $returnVal;
+}
+
+/**
+ * parse_size converts php.ini values from strings (like 128M or 64K) into actual numbers that can be compared
+ * @return integer
+ */
+function parse_size( $size ) {
+	$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+	$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+	if ( $unit ) { // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+		return round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+	}
+	else {
+		return round( $size );
+	}
 }
