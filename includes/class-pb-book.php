@@ -111,6 +111,17 @@ class Book {
 
 			$book_information[$key] = $val;
 		}
+		
+		// Return our best guess if no book information has been entered.
+		if ( empty( $book_information ) ) {
+			$book_information['pb_title'] = get_bloginfo( 'name' );
+			if ( !function_exists( 'get_user_by' ) ) {
+			    include( ABSPATH . 'wp-includes/pluggable.php' ); 
+			}
+			$author = get_user_by( 'email', get_bloginfo( 'admin_email' ) );
+			$book_information['pb_author'] = $author->display_name;
+			$book_information['pb_cover_image'] = \PressBooks\Image\default_cover_url();
+		}
 
 		// -----------------------------------------------------------------------------
 		// Cache & Return
@@ -539,6 +550,8 @@ class Book {
 		if ( 'first' == $what )
 			return static::getFirst();
 
+		global $blog_id;
+		
 		global $post;
 
 		$current_post_id = $post->ID;
@@ -561,7 +574,7 @@ class Book {
 		// Get next/previous
 		$what( $pos );
 		while ( $post_id = current( $pos ) ) {
-			if ( $order[$post_id]['post_status'] == 'publish' ) {
+			if ( $order[$post_id]['post_status'] == 'publish' && current_user_can_for_blog( $blog_id, 'read' ) ) {
 				break;
 			} else {
 				$what( $pos );
