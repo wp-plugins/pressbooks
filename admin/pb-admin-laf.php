@@ -107,20 +107,28 @@ function replace_book_admin_menu() {
 		array_push( $submenu['edit.php?post_type=chapter'], $add_part, $add_chapter, $add_front_matter, $add_back_matter );
 	}
 
-	$chapter_types = $submenu['edit.php?post_type=chapter'][15];
-	$front_matter_types = $submenu['edit.php?post_type=front-matter'][15];
-	$back_matter_types = $submenu['edit.php?post_type=back-matter'][15];
 	unset( $submenu['edit.php?post_type=chapter'][10] );
 	unset( $submenu['edit.php?post_type=chapter'][15] );
 
 	if ( is_super_admin() ) {
 		// If network administrator, give the option to see chapter, front matter and back matter types.
-		array_push(
-			$submenu['edit.php?post_type=chapter'],
-			$chapter_types,
-			$front_matter_types,
-			$back_matter_types
-		);
+		$front_matter_types = $submenu['edit.php?post_type=front-matter'][15];
+		$back_matter_types = $submenu['edit.php?post_type=back-matter'][15];
+		if ( isset( $submenu['edit.php?post_type=chapter'][15] ) ) :
+			$chapter_types = $submenu['edit.php?post_type=chapter'][15];
+			array_push(
+				$submenu['edit.php?post_type=chapter'],
+				$chapter_types,
+				$front_matter_types,
+				$back_matter_types
+			);
+		else :
+			array_push(
+				$submenu['edit.php?post_type=chapter'],
+				$front_matter_types,
+				$back_matter_types
+			);
+		endif;
 	}
 
 	// Book Information
@@ -620,10 +628,22 @@ function privacy_settings_init() {
 		'privacy_settings',
 		'privacy_settings_section'
 	);
+	add_settings_field(
+		'permissive_private_content',
+		__( 'Private Content', 'pressbooks' ),
+		__NAMESPACE__ . '\privacy_permissive_private_content_callback',
+		'privacy_settings',
+		'privacy_settings_section'
+	);
 	register_setting(
 		'privacy_settings',
 		'blog_public',
 		__NAMESPACE__ . '\privacy_blog_public_sanitize'
+	);
+	register_setting(
+		'privacy_settings',
+		'permissive_private_content',
+		__NAMESPACE__ . '\privacy_permissive_private_content_sanitize'
 	);
 
 }
@@ -655,6 +675,34 @@ function privacy_blog_public_callback( $args ) {
 	echo $html;
 }
 
+/**
+ * Privacy settings, blog_public field callback
+ *
+ * @param $args
+ */
+function privacy_permissive_private_content_callback( $args ) {
+	$permissive_private_content = absint( get_option( 'permissive_private_content' ) );
+	$subscriber = get_role( 'subscriber' );
+	$contributor = get_role( 'contributor' );
+	$author = get_role( 'author' );
+	if ( $permissive_private_content == 1 ) { // If permissive private content is set to true, adjust capabilities
+		$subscriber->add_cap( 'read_private_posts' );
+		$contributor->add_cap( 'read_private_posts' );
+		$author->add_cap( 'read_private_posts' );
+	} else {
+		$subscriber->remove_cap( 'read_private_posts' );
+		$contributor->remove_cap( 'read_private_posts' );
+		$author->remove_cap( 'read_private_posts' );
+	} ?>
+	<p><?php _e( 'Who can see private front matter, chapters and back matter?', 'pressbooks' ); ?></p>
+	<fieldgroup>
+		<input type="radio" id="standard-private-content" name="permissive_private_content" value="0" <?php checked( $permissive_private_content, 0 ); ?>/>
+		<label for="standard-private-content"><?php _e( 'Only logged in editors and administrators.', 'pressbooks' ); ?></label><br />
+		<input type="radio" id="permissive-private-content" name="permissive_private_content" value="1"  <?php checked( $permissive_private_content, 1 ); ?>/>
+		<label for="permissive-private-content"><?php _e( 'All logged in users including subscribers.', 'pressbooks' ); ?></label>
+	</fieldgroup>
+<?php }
+
 
 /**
  * Privacy settings, blog_public field sanitization
@@ -666,6 +714,15 @@ function privacy_blog_public_sanitize( $input ) {
 	return absint( $input );
 }
 
+/**
+ * Privacy settings, private_chapters field sanitization
+ *
+ * @param $input
+ * @return string
+ */
+function privacy_permissive_private_content_sanitize( $input ) {
+	return absint( $input );
+}
 
 /**
  * Display Privacy settings

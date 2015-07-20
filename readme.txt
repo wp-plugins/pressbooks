@@ -1,11 +1,11 @@
 === Pressbooks ===
 
 Contributors: Pressbooks <code@pressbooks.com>
-Version: 2.5.2
+Version: 2.5.3
 Tags: ebooks, publishing, webbooks
 Requires at least: 4.2.2
 Tested up to: 4.2.2
-Stable tag: trunk
+Stable tag: 2.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -194,6 +194,11 @@ TK.
 TK.
 
 == Changelog ==
+
+= 2.5.3 =
+* Added option to allow logged-in subscribers, contributors and authors to view a book's private content (props to @marcusschiesser for the feature request).
+* Fixed an issue where the webbook TOC would not be displayed for any user who was not logged in (props to @sswettenham for the bug report).
+* Fixed an issue where the media folder was not being deleted after ODT exports without a cover image.
 
 = 2.5.2 =
 * Added MCE Superscript & Subscript Buttons (migrated from Pressbooks Textbook, props to @bdolor and the plugin's creators).
