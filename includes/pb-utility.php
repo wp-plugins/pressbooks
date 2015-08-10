@@ -349,6 +349,7 @@ function show_experimental_features() {
 function include_plugins() {
 	$symbionts = array(
 	    'custom-metadata/custom_metadata.php' => 1,
+	    'disable-comments/disable-comments.php' => 1,
 	    'search-regex/search-regex.php' => 1,
 	    'mce-table-buttons/mce_table_buttons.php' => 1,
 	    'mce-superscript-subscript-buttons/mce-superscript-subscript-buttons.php' => 1,
@@ -427,4 +428,18 @@ function parse_size( $size ) {
 	else {
 		return round( $size );
 	}
+}
+
+/**
+ * format_bytes converts an byte value supplied as an integer into a string suffixed with the appropriate unit of measurement.
+ * @return string
+ */
+function format_bytes( $bytes, $precision = 2 ) { 
+    $units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+    $bytes = max( $bytes, 0 ); 
+    $pow = floor( ( $bytes ? log( $bytes ) : 0 ) / log( 1024 ) ); 
+    $pow = min( $pow, count( $units ) - 1 ); 
+    $bytes /= (1 << (10 * $pow)); 
+
+    return round( $bytes, $precision ) . ' ' . $units[$pow]; 
 }
